@@ -38,7 +38,19 @@ def battle(grid, visited = []):
     while q:
         #방문할 곳
         x = q.popleft()
-        print(x)
+        print("x",x)
+
+        #방문했다는걸 기록해야함.
+        if x not in visited:
+            visited
+        #다음에 방문할 곳을 추가해야함!
+        #동서남북으로 이동 next_q
+        #x의 현위치를 어떻게 파악하지?
+        #grid로! ㅎ
+        # for r in
+        #     next_q = x + dx[r]
+        #     if x 
+        # q.append()
 
 
 
