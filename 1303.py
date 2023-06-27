@@ -1,66 +1,49 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# 전투 bfs, dfs문제
-# 이 문제는 방문, 조회해서 푸는 문제구나.
-# bfs로 풀면 될듯. dfs
-# 일단 bfs 코드
-# N = 5
-# M =5
+
 import sys
 
 sys.stdin = open("1303.txt", "r")
 # N,M= map(int, input().split())
 N, M = map(int, input().split())
-print("N:", N)
-print("M:", M)
+
 
 from collections import deque
 
 grid = [list(row) for row in sys.stdin.read().split()]
-w_number = 0
-b_number = 0
 
 
-def battle(x, y, color):
+dx = [[1, 0], [-1, 0], [0, -1], [0, 1]]
+#visited를 전역변수로 두고 방문한 노드의 경우 넘어가도록 했어야했음!
+#battle 함수에서  W 인지 B인지에 따라 그 값을 시작값으로 1조회하고 다음 노드방문하는 bfs함수 실행하게 하는데,
+#방문처리가 안되어있어서 bfs 실행시킴. 그래서 이미 방문한 애인데 시작해서 1 카운트 함!!
+visited = [[False] * (N) for _ in range(N)]
+print('//////////////')
+def bfs(x, y, color):
+    print("x",x,"y:",y,"color",color)
     # 현재 병사의 수
-    count = 0
-    visited = [[False] * (N) for _ in range(N)]
+    count = 1
+   
 
     row = len(grid)
     # 인덱스 0이 살짝 헷갈림
     col = len(grid[0])
-
-    dx = [[1, 0], [-1, 0], [0, -1], [0, 1]]
-
-    # f, s = dx[0]
-    # print(f)
-    # print(s)
-
-    # 다음 방문할 곳
-    # if grid[0][0] == "w":
-    #     w_number = 1
-    # else:
-    #     b_number = 1
-
     q = deque()
-    q.append((0, 0))
+    #튜플은 바로 추가 안됨 append로 넣어야함
+    q.append((x, y))
 
     # 첫 시작 방문
-    visited[0][0] = True
+    visited[x][y] = True
 
     while q:
         # 방문할 곳
         cur_x, cur_y = q.popleft()
-        print("cur_x", cur_x)
-        print("cur_y", cur_y)
+        # print("cur_x", cur_x ,"cur_y",cur_y)
 
         for i in range(4):
             next_x = cur_x + dx[i][0]
             next_y = cur_y + dx[i][1]
-            print("dx[i][0]:", dx[i][0])
-            print("dx[0][i]:", dx[i][1])
-            print("next_x:", next_x)
-            print("next_y:", next_y)
+    
+            # print("next_x:", next_x)
+            # print("next_y:", next_y)
             # w 가 w면 몇개인지 세야함. 배열에 저장해놔야함
             # b가 b면 몇개인지 기록해야함. 배열에 저장해놔야함
             if (
@@ -71,41 +54,64 @@ def battle(x, y, color):
                 and visited[next_x][next_y] == False
                 and grid[next_x][next_y] == color  # 각 색을 어떻게 저장하나 했더니 color를 확인하는구나.
             ):
-                # print("grid[next_x][next_y]:", grid[next_x][next_y])
-                # if grid[next_x][next_y] == "W":
-                #     w_number += 1
-                #     print("")
-
-                #     # if next_x == 0 or next_y == 0 or grid[next_x][next_y] == 'B'
-                # elif grid[next_x][next_y] == "B":
-                #     b_number += 1
-
+            
                 # 방문 기록 및 다음방문 저장
                 q.append((next_x, next_y))
+                # print("q안:",q)
                 visited[next_x][next_y] = True
-
-                print("visited:", visited)
-                count += 1
-    return count + 1  # 1을 더하는 이유가 뭐지? #맨처음 시작 1을 더하는건가?????
+                # print("visited:", visited)
+                # print("count:",count)
+                count += 1 
+                # print("count:",count)
+    return count   # 1을 더하는 이유가 뭐지? #맨처음 시작 1을 더하는건가?????
 
 
 # 이제 각 색의 값을 제곱해서 더해야함
 
-# if grid[next_x][next_y] == "W":
-#     w_number += 1
-#     print("")
+def battle(grid, N, M):
+    W_answer = 0
+    B_answer = 0
+    w= []
+    b = []
 
-#     # if next_x == 0 or next_y == 0 or grid[next_x][next_y] == 'B'
-# elif grid[next_x][next_y] == "B":
-#     b_number += 1
+    # print("포문visited:",visited)
+    for row in range(N):
+        # print("포문row:",row)
+        for col in range(M):
+            # print("포문row:",row)
+            # print("포문col:",col)
+            # print("포문visited[row][col]",visited[row][col])
+            if visited[row][col] == False:
+                # print("포문grid[row][col]")
+                if grid[row][col] == "W":
+                    # print("포문bfs(row,col,grid[row][col]):",bfs(row,col,grid[row][col]))
+                    # print("포문grid[row][col]:",grid[row][col])
+                    w.append(bfs(row,col,grid[row][col]) **2)
+                    # W_answer =  sum(w)
+                    W_answer += bfs(row,col,grid[row][col]) **2
+
+                    
+
+                    print("11111:",W_answer)
+         
+                    # W_answer += bfs(row,col,grid[row][col]) ** 2
+                    print("wwwwwwwwwwwww:", sum(w))
+                
+                
+                
+                elif grid[row][col] == "B":
+                    # print("포문bfs(row,col,grid[row][col]):",bfs(row,col,grid[row][col]))
+                    print("포문grid[row][col]:",grid[row][col])
+                    b.append(bfs(row,col,grid[row][col]) **2)
+                    B_answer =sum(b)
+                    
+                    print("bbbbbbbbbb",sum(b))
+
+           
+             
+                    # B_answer += bfs(row,col,grid[row][col]) ** 2
+                 
 
 
-print("bfs::", battle(grid))
 
-# grid = [ [-1]* (N) for _ in range(M)]
-# print("grid:",grid)
-
-# from collections import deque
-# def bfs():
-#     q = deque()
-#     q.append((0,0))
+battle(grid, N, M)
